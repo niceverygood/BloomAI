@@ -1,0 +1,45 @@
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    @apply bg-peach text-ink;
+  }
+  ::selection {
+    @apply bg-coral-soft text-coral-deep;
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-2xl bg-white border border-line shadow-card;
+  }
+  .badge {
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-primary {
+    @apply btn bg-coral text-white hover:bg-coral-deep;
+  }
+  .btn-ghost {
+    @apply btn bg-white border border-line text-ink hover:bg-peach;
+  }
+}
+
+/* 가는 스크롤바 */
+::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+::-webkit-scrollbar-thumb {
+  background: #e7d5db;
+  border-radius: 9px;
+}

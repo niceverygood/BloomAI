@@ -1,0 +1,203 @@
+// BloomAI — 난임 전문 AI CRM
+// 개발 DB는 SQLite(즉시 실행). 프로덕션은 Postgres + RLS 권장.
+// SQLite는 enum 미지원 → 상태값은 String + 주석으로 관리.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+/// 병원(테넌트) — 멀티테넌시의 최상위 격리 단위
+model Tenant {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  plan      String   @default("professional") // starter | professional | enterprise
+  createdAt DateTime @default(now())
+
+  users     User[]
+  patients  Patient[]
+  protocols Protocol[]
+}
+
+/// 직원 (코디네이터/간호사/의사/관리자)
+model User {
+  id        String   @id @default(cuid())
+  tenantId  String
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  name      String
+  email     String   @unique
+  role      String   @default("coordinator") // coordinator | nurse | doctor | admin
+  createdAt DateTime @default(now())
+
+  patients      Patient[]      @relation("CoordinatorPatients")
+  consultations Consultation[]
+  tasks         Task[]
+
+  @@index([tenantId])
+}
+
+/// 환자
+model Patient {
+  id            String    @id @default(cuid())
+  tenantId      String
+  tenant        Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  name          String
+  birthDate     DateTime?
+  phone         String?
+  email         String?
+  partnerName   String?
+  stage         String    @default("consult") // consult | testing | planning | in_cycle | pregnant | followup | inactive
+  diagnosis     String?
+  amh           Float? // 항뮬러관호르몬 (난소 예비능 지표)
+  notes         String?
+  coordinatorId String?
+  coordinator   User?     @relation("CoordinatorPatients", fields: [coordinatorId], references: [id])
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  lastContactAt DateTime?
+
+  cycles        TreatmentCycle[]
+  consultations Consultation[]
+  appointments  Appointment[]
+  labResults    LabResult[]
+  medications   Medication[]
+  messages      Message[]
+  tasks         Task[]
+  riskScores    RiskScore[]
+
+  @@index([tenantId])
+}
+
+/// 시술 사이클 (난임 도메인 코어)
+model TreatmentCycle {
+  id          String   @id @default(cuid())
+  patientId   String
+  patient     Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  type        String // natural | ovulation_induction | iui | ivf | fet
+  status      String   @default("stimulation") // stimulation | monitoring | trigger | retrieval | transfer | luteal | beta_test | complete
+  cycleNumber Int      @default(1)
+  startedAt   DateTime @default(now())
+  outcome     String? // ongoing | success | failed | canceled
+  notes       String?
+
+  labResults  LabResult[]
+  medications Medication[]
+
+  @@index([patientId])
+}
+
+/// 검사 결과 (호르몬 수치·난포 크기 시계열)
+model LabResult {
+  id        String          @id @default(cuid())
+  patientId String
+  patient   Patient         @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  cycleId   String?
+  cycle     TreatmentCycle? @relation(fields: [cycleId], references: [id])
+  marker    String // E2 | LH | P4 | FSH | AMH | beta_hcg | follicle
+  value     Float
+  unit      String?
+  takenAt   DateTime        @default(now())
+
+  @@index([patientId])
+}
+
+/// 약물/주사 스케줄 (자가주사 포함)
+model Medication {
+  id          String          @id @default(cuid())
+  patientId   String
+  patient     Patient         @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  cycleId     String?
+  cycle       TreatmentCycle? @relation(fields: [cycleId], references: [id])
+  name        String
+  dose        String?
+  route       String? // sc | im | oral | vaginal
+  scheduledAt DateTime
+  takenAt     DateTime?
+  status      String          @default("scheduled") // scheduled | taken | missed
+
+  @@index([patientId])
+}
+
+/// 예약 (유동적 일정)
+model Appointment {
+  id        String   @id @default(cuid())
+  patientId String
+  patient   Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  type      String // consult | ultrasound | blood_test | retrieval | transfer | beta_test
+  startsAt  DateTime
+  status    String   @default("scheduled") // scheduled | done | canceled | noshow
+  notes     String?
+
+  @@index([patientId])
+}
+
+/// 상담 기록 (AI 자동 요약)
+model Consultation {
+  id         String   @id @default(cuid())
+  patientId  String
+  patient    Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  authorId   String?
+  author     User?    @relation(fields: [authorId], references: [id])
+  transcript String
+  summary    String? // AI 구조화 노트 (JSON 문자열)
+  aiModel    String?
+  createdAt  DateTime @default(now())
+
+  @@index([patientId])
+}
+
+/// 환자 소통 (알림톡/문자/챗봇)
+model Message {
+  id        String   @id @default(cuid())
+  patientId String
+  patient   Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  channel   String // alimtalk | sms | chatbot
+  direction String // outbound | inbound
+  body      String
+  createdAt DateTime @default(now())
+
+  @@index([patientId])
+}
+
+/// 할일 (AI 자동 생성 또는 수동)
+model Task {
+  id         String    @id @default(cuid())
+  patientId  String?
+  patient    Patient?  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  assigneeId String?
+  assignee   User?     @relation(fields: [assigneeId], references: [id])
+  title      String
+  dueAt      DateTime?
+  done       Boolean   @default(false)
+  source     String    @default("manual") // manual | ai
+  createdAt  DateTime  @default(now())
+}
+
+/// 이탈 위험 스코어 (AI 인사이트)
+model RiskScore {
+  id        String   @id @default(cuid())
+  patientId String
+  patient   Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  score     Int // 0-100
+  level     String // low | medium | high
+  reasons   String // JSON 문자열 배열
+  action    String?
+  createdAt DateTime @default(now())
+
+  @@index([patientId])
+}
+
+/// 병원별 시술 프로토콜 템플릿
+model Protocol {
+  id       String @id @default(cuid())
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  name     String
+  type     String
+  steps    String // JSON
+}

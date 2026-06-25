@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>BloomAI 영업 소개서</title>
+<style>
+  @page { size: A4; margin: 0; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  :root{
+    --plum:#2E1B33; --ink:#3A2A40; --muted:#7A6A80;
+    --coral:#FF6B81; --coral-deep:#E6435F; --coral-soft:#FFE3E6;
+    --peach:#FFF4EF; --peach2:#FFE9DF;
+    --sage:#4FA98E; --sage-soft:#E3F4EE;
+    --gold:#F2A23C; --gold-soft:#FFF0DA;
+    --line:#F0E2E6;
+  }
+  html,body{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  body{
+    font-family:'Apple SD Gothic Neo','Pretendard','Noto Sans KR',sans-serif;
+    color:var(--ink); line-height:1.5; -webkit-font-smoothing:antialiased;
+  }
+  .page{
+    position:relative; width:210mm; height:297mm; overflow:hidden;
+    page-break-after:always; background:#fff;
+  }
+  .page:last-child{ page-break-after:auto; }
+  .pad{ padding:22mm 18mm; height:100%; }
+
+  /* ---------- shared ---------- */
+  .brandrow{ display:flex; align-items:center; gap:9px; }
+  .logo-ico{ width:30px; height:30px; }
+  .logo-tx{ font-size:20px; font-weight:800; letter-spacing:-.5px; color:var(--plum); }
+  .logo-tx b{ color:var(--coral-deep); }
+  .kicker{ display:inline-block; font-size:11px; font-weight:800; letter-spacing:1.5px;
+    color:var(--coral-deep); background:var(--coral-soft); padding:6px 12px; border-radius:20px; }
+  .kicker.sage{ color:#2f7a64; background:var(--sage-soft); }
+  .kicker.gold{ color:#b9740f; background:var(--gold-soft); }
+  h2.sec{ font-size:30px; font-weight:800; color:var(--plum); letter-spacing:-1px; margin-top:16px; line-height:1.25; }
+  h2.sec em{ font-style:normal; color:var(--coral-deep); }
+  .lead{ font-size:14px; color:var(--muted); margin-top:10px; max-width:150mm; }
+  .foot{ position:absolute; bottom:12mm; left:18mm; right:18mm;
+    display:flex; justify-content:space-between; font-size:10px; color:#B7A8BC; border-top:1px solid var(--line); padding-top:7px; }
+
+  /* ---------- COVER ---------- */
+  .cover{ background:linear-gradient(160deg,#FFF4EF 0%,#FFE3E6 55%,#FFD9E2 100%); }
+  .blob{ position:absolute; border-radius:50%; filter:blur(2px); opacity:.55; }
+  .b1{ width:340px; height:340px; background:radial-gradient(circle at 30% 30%,#FFB7C2,#FF8AA0); top:-90px; right:-70px; opacity:.6;}
+  .b2{ width:260px; height:260px; background:radial-gradient(circle at 40% 40%,#FFD9A8,#F9B36B); bottom:30px; left:-80px; opacity:.5;}
+  .b3{ width:160px; height:160px; background:radial-gradient(circle at 40% 40%,#9FE3CE,#5BBDA0); bottom:170px; right:30px; opacity:.45;}
+  .cover .pad{ display:flex; flex-direction:column; }
+  .cover-hero{ margin-top:auto; margin-bottom:auto; }
+  .cover h1{ font-size:54px; font-weight:800; color:var(--plum); letter-spacing:-2px; line-height:1.15; }
+  .cover h1 .hl{ color:var(--coral-deep); }
+  .cover .sub{ font-size:18px; color:#6E4A55; margin-top:18px; font-weight:600; }
+  .cover .tags{ display:flex; gap:8px; margin-top:26px; flex-wrap:wrap; }
+  .chip{ font-size:12px; font-weight:700; background:#fff; color:var(--plum); padding:9px 15px; border-radius:30px; box-shadow:0 4px 14px rgba(216,76,106,.12); }
+  .chip .d{ color:var(--coral-deep); }
+  .cover-bottom{ display:flex; justify-content:space-between; align-items:flex-end; }
+  .cover-bottom .meta{ font-size:12px; color:#8A6A74; }
+
+  /* ---------- generic grids ---------- */
+  .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:26px; }
+  .grid3{ display:grid; grid-template-columns:repeat(3,1fr); gap:13px; margin-top:24px; }
+
+  .card{ background:#fff; border:1px solid var(--line); border-radius:16px; padding:20px; box-shadow:0 6px 18px rgba(46,27,51,.04); }
+  .card .ic{ width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:22px; margin-bottom:12px; }
+  .card h3{ font-size:16px; font-weight:800; color:var(--plum); margin-bottom:6px; }
+  .card p{ font-size:12.5px; color:var(--muted); line-height:1.55; }
+  .ic.coral{ background:var(--coral-soft);} .ic.sage{ background:var(--sage-soft);} .ic.gold{ background:var(--gold-soft);} .ic.plum{ background:#F1E6F4;}
+
+  /* pain page */
+  .pain{ display:flex; gap:14px; align-items:flex-start; background:#fff; border:1px solid var(--line);
+    border-left:5px solid var(--coral); border-radius:14px; padding:18px 20px; margin-top:14px; }
+  .pain .n{ font-size:26px; font-weight:800; color:var(--coral-soft); -webkit-text-stroke:1px var(--coral); }
+  .pain h3{ font-size:17px; font-weight:800; color:var(--plum); }
+  .pain p{ font-size:13px; color:var(--muted); margin-top:4px; }
+  .pain .quote{ font-size:12px; color:#B07C88; font-style:italic; margin-top:7px; }
+
+  /* solution flow */
+  .flow{ display:flex; align-items:stretch; gap:0; margin-top:26px; }
+  .flow .node{ flex:1; background:#fff; border:1px solid var(--line); border-radius:16px; padding:18px; text-align:center; }
+  .flow .node.hub{ background:linear-gradient(160deg,var(--coral),var(--coral-deep)); border:none; color:#fff; box-shadow:0 10px 24px rgba(216,76,106,.3); }
+  .flow .node h4{ font-size:14px; font-weight:800; margin-bottom:8px; color:var(--plum); }
+  .flow .node.hub h4{ color:#fff; }
+  .flow .node ul{ list-style:none; text-align:left; }
+  .flow .node li{ font-size:11.5px; color:var(--muted); padding:3px 0 3px 14px; position:relative; }
+  .flow .node li:before{ content:'•'; position:absolute; left:0; color:var(--coral); }
+  .flow .node.hub li{ color:#FFE3E6; } .flow .node.hub li:before{ color:#fff; }
+  .arrow{ display:flex; align-items:center; padding:0 6px; color:var(--coral); font-size:22px; }
+  .valrow{ display:grid; grid-template-columns:repeat(3,1fr); gap:13px; margin-top:18px; }
+  .val{ background:var(--peach); border-radius:14px; padding:16px; }
+  .val .big{ font-size:26px; font-weight:800; color:var(--coral-deep); }
+  .val .lbl{ font-size:12px; color:var(--ink); font-weight:700; margin-top:2px; }
+  .val .d{ font-size:11px; color:var(--muted); margin-top:4px; }
+
+  /* AI cards */
+  .ai{ position:relative; background:#fff; border:1px solid var(--line); border-radius:16px; padding:18px 18px 18px 20px; overflow:hidden; }
+  .ai .badge{ position:absolute; top:14px; right:14px; font-size:10px; font-weight:800; color:#fff; background:var(--coral); padding:3px 9px; border-radius:20px; }
+  .ai .ic{ width:46px; height:46px; border-radius:13px; display:flex; align-items:center; justify-content:center; font-size:23px; margin-bottom:11px; }
+  .ai h3{ font-size:16px; font-weight:800; color:var(--plum); }
+  .ai .tagline{ font-size:11.5px; font-weight:700; color:var(--coral-deep); margin:3px 0 7px; }
+  .ai p{ font-size:12px; color:var(--muted); line-height:1.55; }
+  .ai .kpi{ margin-top:9px; font-size:11.5px; font-weight:800; color:var(--sage); background:var(--sage-soft); display:inline-block; padding:4px 10px; border-radius:8px; }
+
+  /* compare table */
+  table.cmp{ width:100%; border-collapse:separate; border-spacing:0; margin-top:24px; font-size:11.5px; }
+  table.cmp th,table.cmp td{ padding:11px 10px; text-align:center; border-bottom:1px solid var(--line); }
+  table.cmp thead th{ font-size:12px; font-weight:800; color:var(--muted); background:#FAF6F7; }
+  table.cmp thead th.us{ color:#fff; background:linear-gradient(160deg,var(--coral),var(--coral-deep)); border-radius:12px 12px 0 0; }
+  table.cmp td.feat{ text-align:left; font-weight:700; color:var(--plum); }
+  table.cmp td.us{ background:#FFF4F1; font-weight:800; color:var(--coral-deep); }
+  table.cmp tbody tr:last-child td{ border-bottom:none; }
+  .yes{ color:var(--sage); font-weight:800; } .no{ color:#CBB9C0; } .part{ color:var(--gold); font-weight:700; }
+
+  /* pricing */
+  .prices{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:22px; align-items:stretch; }
+  .price{ background:#fff; border:1px solid var(--line); border-radius:18px; padding:22px 18px; display:flex; flex-direction:column; }
+  .price.hot{ border:2px solid var(--coral); box-shadow:0 14px 30px rgba(216,76,106,.16); position:relative; }
+  .price.hot .pop{ position:absolute; top:-12px; left:50%; transform:translateX(-50%); font-size:10px; font-weight:800; color:#fff; background:var(--coral-deep); padding:5px 14px; border-radius:20px; white-space:nowrap; }
+  .price .tier{ font-size:15px; font-weight:800; color:var(--plum); }
+  .price .who{ font-size:11px; color:var(--muted); margin:3px 0 14px; min-height:30px; }
+  .price .amt{ font-size:30px; font-weight:800; color:var(--coral-deep); letter-spacing:-1px; }
+  .price .amt small{ font-size:13px; color:var(--muted); font-weight:700; }
+  .price .per{ font-size:11px; color:var(--muted); margin-bottom:14px; }
+  .price ul{ list-style:none; margin-top:4px; }
+  .price li{ font-size:11.5px; color:var(--ink); padding:5px 0 5px 18px; position:relative; border-top:1px dashed var(--line); }
+  .price li:first-child{ border-top:none; }
+  .price li:before{ content:'✓'; position:absolute; left:0; color:var(--sage); font-weight:800; }
+  .price li.off:before{ content:'–'; color:#CBB9C0; } .price li.off{ color:#B7A8BC; }
+  .savebar{ margin-top:18px; background:linear-gradient(135deg,#FFF0DA,#FFE3E6); border-radius:14px; padding:16px 20px; display:flex; align-items:center; gap:16px; }
+  .savebar .em{ font-size:24px; }
+  .savebar b{ color:var(--coral-deep); }
+  .savebar .t{ font-size:12.5px; color:var(--ink); }
+  .pricefoot{ font-size:10px; color:#B7A8BC; margin-top:12px; }
+
+  /* effect / CTA */
+  .roirow{ display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-top:24px; }
+  .roi{ background:linear-gradient(160deg,#fff,#FFF6F2); border:1px solid var(--line); border-radius:16px; padding:18px 14px; text-align:center; }
+  .roi .big{ font-size:30px; font-weight:800; color:var(--coral-deep); letter-spacing:-1px; }
+  .roi .lbl{ font-size:11.5px; color:var(--ink); font-weight:700; margin-top:5px; }
+  .steps{ display:flex; gap:12px; margin-top:26px; }
+  .step{ flex:1; background:#fff; border:1px solid var(--line); border-radius:14px; padding:16px; }
+  .step .num{ width:28px; height:28px; border-radius:50%; background:var(--coral); color:#fff; font-weight:800; font-size:13px; display:flex; align-items:center; justify-content:center; margin-bottom:10px; }
+  .step h4{ font-size:13.5px; font-weight:800; color:var(--plum); }
+  .step p{ font-size:11.5px; color:var(--muted); margin-top:3px; }
+  .cta{ margin-top:28px; background:linear-gradient(160deg,var(--coral),var(--coral-deep)); border-radius:20px; padding:28px 30px; color:#fff; display:flex; justify-content:space-between; align-items:center; }
+  .cta h3{ font-size:22px; font-weight:800; }
+  .cta p{ font-size:13px; opacity:.92; margin-top:6px; }
+  .cta .info{ text-align:right; font-size:12.5px; line-height:1.8; }
+  .cta .info b{ font-size:14px; }
+</style>
+</head>
+<body>
+
+<!-- ============ PAGE 1 : COVER ============ -->
+<section class="page cover">
+  <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+  <div class="pad">
+    <div class="brandrow">
+      <svg class="logo-ico" viewBox="0 0 48 48" fill="none">
+        <path d="M24 26c-6-4-12-2-14 4 6 3 12 1 14-4z" fill="#FF8AA0"/>
+        <path d="M24 26c6-4 12-2 14 4-6 3-12 1-14-4z" fill="#FF6B81"/>
+        <path d="M24 26c-3-6-1-12 5-14 3 6 1 12-5 14z" fill="#FFB0BD"/>
+        <path d="M24 26c3-6 1-12-5-14-3 6-1 12 5 14z" fill="#F9B36B"/>
+        <circle cx="24" cy="26" r="4" fill="#E6435F"/>
+        <path d="M24 30v12" stroke="#4FA98E" stroke-width="2.4" stroke-linecap="round"/>
+        <path d="M24 38c3 0 5-2 5-5-3 0-5 2-5 5z" fill="#4FA98E"/>
+      </svg>
+      <div class="logo-tx">Bloom<b>AI</b></div>
+    </div>
+
+    <div class="cover-hero">
+      <span class="kicker">난임 전문 AI CRM</span>
+      <h1>난임 클리닉을 위한<br><span class="hl">올인원 AI CRM</span></h1>
+      <div class="sub">코디네이터의 손과 환자의 마음을<br>동시에 돌보는 단 하나의 플랫폼</div>
+      <div class="tags">
+        <div class="chip"><span class="d">●</span> 상담 자동 기록·요약</div>
+        <div class="chip"><span class="d">●</span> 24시간 환자 챗봇</div>
+        <div class="chip"><span class="d">●</span> 시술 일정 자동화</div>
+        <div class="chip"><span class="d">●</span> 이탈 예측 인사이트</div>
+      </div>
+    </div>
+
+    <div class="cover-bottom">
+      <div class="meta">난임 클리닉 도입 제안서<br>2026 · 영업용</div>
+      <div class="meta" style="text-align:right">www.bloom-ai.kr<br>sales@bloom-ai.kr</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PAGE 2 : PROBLEM ============ -->
+<section class="page">
+  <div class="pad">
+    <span class="kicker">WHY BLOOMAI</span>
+    <h2 class="sec">난임 클리닉의 현장,<br><em>이런 고민</em> 있으셨죠?</h2>
+    <p class="lead">난임 진료는 일반 진료와 다릅니다. 매일 바뀌는 일정, 끝없는 안내 전화, 그리고 지친 환자의 마음까지. 기존 EMR이나 엑셀로는 감당하기 어렵습니다.</p>
+
+    <div class="pain">
+      <div class="n">01</div>
+      <div>
+        <h3>코디네이터 한 명이 수백 명을 감당</h3>
+        <p>상담 기록·주사 안내·검사결과 전달을 모두 수기로. 누락 한 번이 사이클 전체를 흔듭니다.</p>
+        <div class="quote">"상담 끝나고 차트 정리만 하루 2시간… 전화 돌리다 하루가 다 가요."</div>
+      </div>
+    </div>
+    <div class="pain">
+      <div class="n">02</div>
+      <div>
+        <h3>매일 바뀌는 시술 일정</h3>
+        <p>난포 성장·호르몬 수치에 따라 채취일·이식일이 매일 변동. 일반 예약 시스템으로는 관리 불가.</p>
+        <div class="quote">"오늘 초음파 보고 내일 일정 다시 잡고… 환자마다 일일이 문자 보내야 해요."</div>
+      </div>
+    </div>
+    <div class="pain">
+      <div class="n">03</div>
+      <div>
+        <h3>지친 환자의 이탈, 그리고 정서</h3>
+        <p>반복되는 실패와 불안. 새벽의 걱정에 응답할 채널이 없으면 환자는 조용히 떠납니다.</p>
+        <div class="quote">"한 번 실패하면 연락이 끊겨요. 케어가 이어지질 않아요."</div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>BloomAI · 난임 전문 AI CRM</span><span>02</span></div>
+</section>
+
+<!-- ============ PAGE 3 : SOLUTION ============ -->
+<section class="page">
+  <div class="pad">
+    <span class="kicker sage">SOLUTION</span>
+    <h2 class="sec">직원과 환자를 <em>하나로</em> 잇고,<br>AI가 그 사이를 메웁니다</h2>
+    <p class="lead">BloomAI는 직원용 웹 콘솔과 환자용 모바일 앱이 실시간으로 연결된 양면형 플랫폼입니다. 그 중심에서 AI가 기록·안내·일정·케어를 자동으로 처리합니다.</p>
+
+    <div class="flow">
+      <div class="node">
+        <h4>👩‍⚕️ 직원 콘솔 (웹)</h4>
+        <ul>
+          <li>환자 파이프라인</li>
+          <li>시술 사이클 관리</li>
+          <li>상담·검사 기록</li>
+          <li>운영 대시보드</li>
+        </ul>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node hub">
+        <h4>✨ BloomAI 엔진</h4>
+        <ul>
+          <li>상담 자동 요약</li>
+          <li>일정 자동 생성</li>
+          <li>알림톡 자동 발송</li>
+          <li>위험 환자 감지</li>
+        </ul>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node">
+        <h4>🤰 환자 앱 (모바일)</h4>
+        <ul>
+          <li>내 사이클 현황</li>
+          <li>주사·약물 알림</li>
+          <li>24시간 AI 챗봇</li>
+          <li>검사결과 쉬운 해설</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 style="margin-top:30px;font-size:16px;font-weight:800;color:var(--plum)">한 줄로 바뀌는 것</h3>
+    <div class="valrow">
+      <div class="val"><div class="big">−90%</div><div class="lbl">상담 기록 시간</div><div class="d">녹취하면 AI가 노트·할일까지 자동 작성</div></div>
+      <div class="val"><div class="big">한 번</div><div class="lbl">일정 승인 클릭</div><div class="d">검사결과 기반 스케줄을 AI가 초안 제시</div></div>
+      <div class="val"><div class="big">24h</div><div class="lbl">끊김 없는 환자 케어</div><div class="d">새벽의 불안에도 챗봇이 곁을</div></div>
+    </div>
+  </div>
+  <div class="foot"><span>BloomAI · 난임 전문 AI CRM</span><span>03</span></div>
+</section>
+
+<!-- ============ PAGE 4 : AI FEATURES ============ -->
+<section class="page" style="background:linear-gradient(180deg,#FFF8F5,#fff)">
+  <div class="pad">
+    <span class="kicker">AI POWERED</span>
+    <h2 class="sec">4가지 AI가 <em>일을 대신</em>합니다</h2>
+    <p class="lead">단순 자동화가 아닙니다. 난임 사이클을 이해하도록 설계된 AI가, 기록부터 정서 케어까지 사람의 일을 덜어냅니다.</p>
+
+    <div class="grid2">
+      <div class="ai">
+        <span class="badge">AI</span>
+        <div class="ic coral">🎙️</div>
+        <h3>상담 자동 기록·요약</h3>
+        <div class="tagline">녹취 → 구조화 노트 자동 생성</div>
+        <p>대면·통화 상담을 녹음하면 한국어 음성인식으로 받아 적고, 난임 특화 양식(주호소·결정사항·다음 액션)으로 요약. 후속 할일까지 자동 등록됩니다.</p>
+        <span class="kpi">기록 시간 5~10분 → 0분</span>
+      </div>
+      <div class="ai">
+        <span class="badge">AI</span>
+        <div class="ic sage">💬</div>
+        <h3>환자 챗봇 (정서 + 정보)</h3>
+        <div class="tagline">24시간 공감하고, 위험은 사람에게</div>
+        <p>병원 프로토콜과 환자 사이클을 근거로 정확히 답하고, 난임 특유의 불안에 공감합니다. 응급 신호 감지 시 즉시 의료진에게 에스컬레이션.</p>
+        <span class="kpi">야간·주말 문의 자동 응대</span>
+      </div>
+      <div class="ai">
+        <span class="badge">AI</span>
+        <div class="ic gold">📅</div>
+        <h3>주기·시술 일정 자동화</h3>
+        <div class="tagline">검사결과 → 다음 일정 초안 자동</div>
+        <p>난포 크기·호르몬 수치와 병원 프로토콜을 바탕으로 다음 진료·주사 스케줄을 AI가 제안. 간호사가 승인 한 번이면 알림톡까지 자동 발송.</p>
+        <span class="kpi">매일 바뀌는 일정, 클릭 한 번</span>
+      </div>
+      <div class="ai">
+        <span class="badge">AI</span>
+        <div class="ic plum">📊</div>
+        <h3>이탈·성공률 인사이트</h3>
+        <div class="tagline">떠나기 전에 먼저 손을 내밀다</div>
+        <p>예약 취소·응답 지연·실패 직후 등 신호로 이탈 위험을 점수화하고 추천 액션을 제시. 코디 부하·단계별 병목까지 한눈에.</p>
+        <span class="kpi">이탈 위험 환자 선제 케어</span>
+      </div>
+    </div>
+    <p style="margin-top:18px;font-size:11px;color:#B7A8BC;line-height:1.5">
+      ※ BloomAI의 AI는 진단·처방을 하지 않습니다. 정보 제공·기록·정서 지지·우선순위 추천에 집중하며, 의료적 판단이 필요한 순간엔 항상 의료진에게 연결합니다. (의료법·비대면 진료 규정 준수)
+    </p>
+  </div>
+  <div class="foot"><span>BloomAI · 난임 전문 AI CRM</span><span>04</span></div>
+</section>
+
+<!-- ============ PAGE 5 : COMPARISON ============ -->
+<section class="page">
+  <div class="pad">
+    <span class="kicker gold">WHY US</span>
+    <h2 class="sec">왜 <em>BloomAI</em>인가</h2>
+    <p class="lead">엑셀·범용 CRM·EMR 부가기능과 무엇이 다른지 한눈에 비교했습니다.</p>
+
+    <table class="cmp">
+      <thead>
+        <tr>
+          <th style="text-align:left">기능</th>
+          <th>수기 / 엑셀</th>
+          <th>범용 CRM</th>
+          <th>EMR 부가</th>
+          <th class="us">BloomAI</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="feat">난임 시술 사이클 관리</td><td class="no">✕</td><td class="no">✕</td><td class="part">△ 진료중심</td><td class="us">✓ 전용</td></tr>
+        <tr><td class="feat">유동적 일정 자동화</td><td class="no">✕</td><td class="no">✕</td><td class="part">△</td><td class="us">✓ AI</td></tr>
+        <tr><td class="feat">상담 자동 기록·요약</td><td class="no">✕</td><td class="part">△ 부분</td><td class="no">✕</td><td class="us">✓ AI</td></tr>
+        <tr><td class="feat">환자 정서 케어 챗봇</td><td class="no">✕</td><td class="no">✕</td><td class="no">✕</td><td class="us">✓ AI</td></tr>
+        <tr><td class="feat">환자용 모바일 앱</td><td class="no">✕</td><td class="part">△</td><td class="part">△</td><td class="us">✓ 전용</td></tr>
+        <tr><td class="feat">주사 알림 + 자가주사 가이드</td><td class="no">✕</td><td class="no">✕</td><td class="part">△</td><td class="us">✓</td></tr>
+        <tr><td class="feat">이탈·운영 인사이트</td><td class="no">✕</td><td class="part">△</td><td class="no">✕</td><td class="us">✓ AI</td></tr>
+        <tr><td class="feat">알림톡·문자 통합 발송</td><td class="part">△ 수동</td><td class="part">△ 별도비용</td><td class="part">△</td><td class="us">✓ 포함</td></tr>
+        <tr><td class="feat">난임 도메인 설계</td><td class="no">✕</td><td class="no">✕</td><td class="part">△</td><td class="us">✓ 전문</td></tr>
+      </tbody>
+    </table>
+
+    <div class="grid3" style="margin-top:26px">
+      <div class="card"><div class="ic coral">🌸</div><h3>난임에만 집중</h3><p>범용 도구가 아닌, 난임 사이클을 이해하도록 설계된 전문 솔루션.</p></div>
+      <div class="card"><div class="ic sage">🔗</div><h3>올인원</h3><p>CRM·메시지·환자앱·AI를 따로 사지 않습니다. 하나로 끝.</p></div>
+      <div class="card"><div class="ic gold">⚡</div><h3>빠른 도입</h3><p>클라우드 SaaS. 서버 구축 없이 1~2주 내 시작.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>BloomAI · 난임 전문 AI CRM</span><span>05</span></div>
+</section>
+
+<!-- ============ PAGE 6 : PRICING ============ -->
+<section class="page" style="background:linear-gradient(180deg,#fff,#FFF8F5)">
+  <div class="pad">
+    <span class="kicker">PRICING</span>
+    <h2 class="sec">투명한 <em>올인원</em> 가격</h2>
+    <p class="lead">메시지비·AI·환자앱을 따로 청구하지 않습니다. 한 가지 요금으로 전부. 연 약정 시 2개월 무료.</p>
+
+    <div class="prices">
+      <div class="price">
+        <div class="tier">스타터</div>
+        <div class="who">단일 코디·소규모 의원의 시작</div>
+        <div class="amt">29<small>만원</small></div>
+        <div class="per">/ 월 · 코디 1석 기준</div>
+        <ul>
+          <li>환자·사이클 관리 코어</li>
+          <li>유동 일정 + 알림톡 발송</li>
+          <li>환자 앱 (주사 알림 포함)</li>
+          <li>AI 상담 요약 <b>월 100건</b></li>
+          <li class="off">AI 챗봇</li>
+          <li class="off">이탈 인사이트</li>
+        </ul>
+      </div>
+
+      <div class="price hot">
+        <div class="pop">가장 많이 선택 ★</div>
+        <div class="tier">프로페셔널</div>
+        <div class="who">성장하는 난임 클리닉의 표준</div>
+        <div class="amt">79<small>만원</small></div>
+        <div class="per">/ 월 · 코디 5석 포함</div>
+        <ul>
+          <li><b>스타터 전 기능 +</b></li>
+          <li>AI 상담 요약 <b>무제한</b></li>
+          <li>환자 챗봇 (정서+정보)</li>
+          <li>시술 일정 AI 자동화</li>
+          <li>이탈·운영 인사이트</li>
+          <li>운영 대시보드</li>
+        </ul>
+      </div>
+
+      <div class="price">
+        <div class="tier">엔터프라이즈</div>
+        <div class="who">다지점·대형 네트워크</div>
+        <div class="amt" style="font-size:24px">맞춤 견적</div>
+        <div class="per">규모·연동에 맞춰</div>
+        <ul>
+          <li><b>프로 전 기능 +</b></li>
+          <li>EMR 연동 / 데이터 마이그레이션</li>
+          <li>다지점 통합 관리</li>
+          <li>전담 CSM · SLA 보장</li>
+          <li>전용 리전 / 보안 옵션</li>
+          <li>맞춤 프로토콜 세팅</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="savebar">
+      <div class="em">💰</div>
+      <div class="t">
+        기존엔 <b>EMR 부가 + 문자 발송비 + 챗봇 솔루션</b>을 따로 결제해 <b>월 100만원 이상</b>.
+        BloomAI 프로페셔널은 <b>월 79만원에 전부 올인원</b> — 게다가 AI까지 기본 탑재.
+      </div>
+    </div>
+    <p class="pricefoot">※ 상기 금액은 도입 제안 기준 예시이며 VAT 별도. 병원 규모·좌석 수·연동 범위에 따라 최종 견적이 조정됩니다. · 무료 도입 컨설팅 & 30일 파일럿 제공.</p>
+  </div>
+  <div class="foot"><span>BloomAI · 난임 전문 AI CRM</span><span>06</span></div>
+</section>
+
+<!-- ============ PAGE 7 : EFFECT + CTA ============ -->
+<section class="page">
+  <div class="pad">
+    <span class="kicker sage">IMPACT</span>
+    <h2 class="sec">도입하면 <em>이렇게</em> 달라집니다</h2>
+    <p class="lead">파일럿 클리닉이 기대하는 핵심 효과입니다.</p>
+
+    <div class="roirow">
+      <div class="roi"><div class="big">−90%</div><div class="lbl">상담 기록 시간</div></div>
+      <div class="roi"><div class="big">−30%</div><div class="lbl">노쇼·일정 누락</div></div>
+      <div class="roi"><div class="big">+40%</div><div class="lbl">주사 순응도</div></div>
+      <div class="roi"><div class="big">2주</div><div class="lbl">내 도입 완료</div></div>
+    </div>
+
+    <h3 style="margin-top:32px;font-size:16px;font-weight:800;color:var(--plum)">도입은 이렇게 진행됩니다</h3>
+    <div class="steps">
+      <div class="step"><div class="num">1</div><h4>무료 진단·시연</h4><p>현장 워크플로우를 함께 보고 맞춤 데모를 제공합니다.</p></div>
+      <div class="step"><div class="num">2</div><h4>30일 파일럿</h4><p>프로토콜·계정 세팅 후 실제 환경에서 효과를 검증합니다.</p></div>
+      <div class="step"><div class="num">3</div><h4>정식 운영</h4><p>전담 CSM이 안착까지 동행. 데이터·연동을 마무리합니다.</p></div>
+    </div>
+
+    <div class="cta">
+      <div>
+        <h3>지금, 무료 도입 상담을 신청하세요</h3>
+        <p>30일 파일럿으로 부담 없이 시작할 수 있습니다.</p>
+      </div>
+      <div class="info">
+        <b>BloomAI 영업팀</b><br>
+        ☎ 02-0000-0000<br>
+        ✉ sales@bloom-ai.kr<br>
+        🌐 www.bloom-ai.kr
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>BloomAI · 난임 전문 AI CRM</span><span>07</span></div>
+</section>
+
+</body>
+</html>
