@@ -7,8 +7,9 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL") // 풀링 커넥션 (Supabase PgBouncer, 6543)
+  directUrl = env("DIRECT_URL") // 직접 연결 (마이그레이션용, 5432)
 }
 
 /// 병원(테넌트) — 멀티테넌시의 최상위 격리 단위
