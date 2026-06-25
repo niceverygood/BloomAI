@@ -1,0 +1,12 @@
+{
+  "name": "BloomAI — 내 케어",
+  "short_name": "BloomAI",
+  "description": "난임 케어를 함께하는 환자 앱",
+  "start_url": "/m",
+  "display": "standalone",
+  "background_color": "#FFF4EF",
+  "theme_color": "#FF6B81",
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

@@ -4,8 +4,14 @@ import { SESSION_COOKIE, verifySession } from "@/lib/session";
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  // 공개 경로
-  if (pathname === "/login" || pathname.startsWith("/api/auth")) {
+  // 공개 경로 (로그인 + 인증 API + 환자 모바일 PWA 데모 + 환자 API)
+  if (
+    pathname === "/login" ||
+    pathname.startsWith("/api/auth") ||
+    pathname === "/m" ||
+    pathname.startsWith("/m/") ||
+    pathname.startsWith("/api/patient")
+  ) {
     return NextResponse.next();
   }
 
